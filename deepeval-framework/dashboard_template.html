@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeepEval Dashboard — ShopMate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg-0: #07090f;
+    --bg-1: #0d1117;
+    --bg-2: #131922;
+    --bg-3: #1a2230;
+    --line: rgba(148,163,184,0.10);
+    --line-2: rgba(148,163,184,0.18);
+    --text: #e2e8f0;
+    --text-mute: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #818cf8;
+    --accent-2: #34d399;
+    --accent-3: #f472b6;
+    --good: #10b981;
+    --mid: #f59e0b;
+    --bad: #ef4444;
+    --grad-1: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+    --grad-2: linear-gradient(135deg, #34d399 0%, #60a5fa 100%);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.25);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(129,140,248,0.08), transparent 60%),
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(244,114,182,0.06), transparent 60%),
+      var(--bg-0);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(129,140,248,0.35); }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.18); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.32); }
+
+  .container { max-width: 1480px; margin: 0 auto; padding: 28px 28px 60px; }
+
+  /* ---- header ---- */
+  .topbar {
+    display: flex; align-items: center; gap: 18px;
+    padding: 16px 22px; margin-bottom: 26px;
+    background: linear-gradient(180deg, rgba(19,25,34,0.85), rgba(19,25,34,0.55));
+    border: 1px solid var(--line-2); border-radius: 18px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-mark {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: var(--grad-1); display: grid; place-items: center;
+    font-weight: 800; font-size: 18px; color: white;
+    box-shadow: 0 8px 22px rgba(129,140,248,0.4), inset 0 -2px 0 rgba(0,0,0,0.18);
+  }
+  .logo-text .t1 { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .logo-text .t2 { font-size: 11.5px; color: var(--text-mute); margin-top: -2px; }
+  .topbar .pill-group { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px; font-size: 11.5px; font-weight: 500;
+    background: rgba(148,163,184,0.06); border: 1px solid var(--line-2);
+    border-radius: 999px; color: var(--text-mute);
+  }
+  .pill .label { color: var(--text-dim); font-size: 10.5px; }
+  .pill .val { color: var(--text); font-family: "JetBrains Mono", monospace; font-size: 11px; }
+  .pill.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--good); box-shadow: 0 0 12px var(--good); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+
+  /* ---- hero KPIs ---- */
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 26px; }
+  .kpi {
+    background: linear-gradient(180deg, rgba(26,34,48,0.65), rgba(13,17,23,0.65));
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    position: relative; overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .kpi:hover { transform: translateY(-2px); border-color: rgba(148,163,184,0.32); }
+  .kpi::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(148,163,184,0.28), transparent);
+  }
+  .kpi .lbl { font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .kpi .v { font-size: 30px; font-weight: 700; margin-top: 8px; letter-spacing: -0.02em; line-height: 1; }
+  .kpi .sub { font-size: 11.5px; color: var(--text-mute); margin-top: 6px; }
+  .kpi.good .v { background: var(--grad-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .kpi.primary .v { background: var(--grad-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* ---- tabs ---- */
+  .tabs {
+    display: inline-flex; gap: 4px; padding: 4px;
+    background: rgba(13,17,23,0.6); border: 1px solid var(--line-2);
+    border-radius: 12px; margin-bottom: 22px;
+  }
+  .tab {
+    padding: 8px 18px; font-size: 13px; font-weight: 500;
+    background: transparent; border: none; border-radius: 9px;
+    color: var(--text-mute); cursor: pointer; font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .tab.active {
+    background: linear-gradient(135deg, rgba(129,140,248,0.22), rgba(244,114,182,0.18));
+    color: var(--text); box-shadow: inset 0 0 0 1px rgba(148,163,184,0.18);
+  }
+  .tab:hover:not(.active) { color: var(--text); background: rgba(148,163,184,0.05); }
+  .tab .count { font-size: 10.5px; padding: 2px 7px; border-radius: 999px; background: rgba(148,163,184,0.12); margin-left: 6px; }
+
+  /* ---- panels ---- */
+  .row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .row.three { grid-template-columns: repeat(3, 1fr); }
+  .panel {
+    background: linear-gradient(180deg, rgba(19,25,34,0.65), rgba(13,17,23,0.65));
+    border: 1px solid var(--line-2); border-radius: 16px;
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .panel-title {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-mute); margin: 0 0 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-title .badge { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(129,140,248,0.18); color: #c7d2fe; text-transform: none; letter-spacing: 0; }
+  canvas { max-width: 100%; }
+
+  /* ---- metric table ---- */
+  .metric-list { display: flex; flex-direction: column; gap: 8px; }
+  .metric-row {
+    display: grid; grid-template-columns: 1.4fr 80px 1fr 60px 60px;
+    gap: 14px; align-items: center;
+    padding: 12px 14px; border-radius: 10px;
+    background: rgba(148,163,184,0.04); border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+  .metric-row:hover { background: rgba(148,163,184,0.07); border-color: var(--line-2); }
+  .metric-row .name { font-size: 13px; font-weight: 500; }
+  .metric-row .num { font-family: "JetBrains Mono", monospace; font-size: 12.5px; text-align: right; font-weight: 600; }
+  .metric-row .num.good { color: var(--good); }
+  .metric-row .num.mid { color: var(--mid); }
+  .metric-row .num.bad { color: var(--bad); }
+  .bar {
+    height: 6px; border-radius: 999px; background: rgba(148,163,184,0.1);
+    overflow: hidden; position: relative;
+  }
+  .bar > div {
+    height: 100%; border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bar > div.good { background: linear-gradient(90deg, #10b981, #34d399); }
+  .bar > div.mid  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .bar > div.bad  { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+  /* ---- heatmap ---- */
+  .heatmap { overflow-x: auto; }
+  .heatmap table { border-collapse: separate; border-spacing: 2px; font-size: 11px; }
+  .heatmap th, .heatmap td { padding: 6px 4px; }
+  .heatmap th {
+    color: var(--text-mute); font-weight: 500; text-align: left; white-space: nowrap;
+    writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; vertical-align: bottom;
+    font-size: 10.5px;
+  }
+  .heatmap th.case-col { writing-mode: initial; transform: none; height: auto; min-width: 200px; vertical-align: middle; padding-right: 12px; }
+  .heatmap td.case-cell { color: var(--text-mute); font-size: 11.5px; min-width: 200px; max-width: 240px; padding-right: 12px; }
+  .heatmap td.case-cell .cid { color: var(--accent); font-family: "JetBrains Mono", monospace; font-size: 10.5px; margin-right: 6px; }
+  .heat-cell {
+    width: 28px; height: 28px; border-radius: 5px; display: inline-block;
+    font-family: "JetBrains Mono", monospace; font-size: 9.5px;
+    color: rgba(255,255,255,0.85); display: grid; place-items: center;
+    cursor: help; transition: transform 0.12s;
+  }
+  .heat-cell:hover { transform: scale(1.18); z-index: 2; position: relative; }
+
+  /* ---- case list ---- */
+  .filters { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .filters input, .filters select {
+    background: rgba(13,17,23,0.7); border: 1px solid var(--line-2); border-radius: 9px;
+    color: var(--text); padding: 8px 12px; font-size: 13px; outline: none;
+    font-family: inherit;
+  }
+  .filters input { flex: 1; min-width: 220px; }
+  .filters input:focus, .filters select:focus { border-color: var(--accent); }
+
+  .case {
+    background: rgba(19,25,34,0.65); border: 1px solid var(--line-2); border-radius: 12px;
+    margin-bottom: 10px; overflow: hidden; transition: border-color 0.15s ease;
+  }
+  .case:hover { border-color: rgba(129,140,248,0.4); }
+  .case > summary {
+    padding: 14px 18px; cursor: pointer; display: flex; align-items: center; gap: 14px;
+    list-style: none;
+  }
+  .case > summary::-webkit-details-marker { display: none; }
+  .case .cid {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    background: rgba(129,140,248,0.18); color: #c7d2fe;
+    padding: 3px 8px; border-radius: 6px;
+  }
+  .case .qpre { flex: 1; font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .case .case-pass {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    padding: 3px 8px; border-radius: 6px;
+  }
+  .case .case-pass.good { background: rgba(16,185,129,0.18); color: var(--good); }
+  .case .case-pass.mid  { background: rgba(245,158,11,0.18); color: var(--mid); }
+  .case .case-pass.bad  { background: rgba(239,68,68,0.18); color: var(--bad); }
+  .case .case-lat { color: var(--text-dim); font-size: 11.5px; font-family: "JetBrains Mono", monospace; }
+  .case .body { padding: 0 18px 18px; }
+  .case .qa { background: rgba(7,9,15,0.6); border-radius: 8px; padding: 12px 14px; margin: 8px 0; border-left: 2px solid var(--line-2); }
+  .case .qa.input { border-left-color: var(--accent); }
+  .case .qa.actual { border-left-color: var(--accent-2); }
+  .case .qa.expected { border-left-color: var(--accent-3); }
+  .case .qa .ql { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
+  .case .qa .qb { font-size: 13px; white-space: pre-wrap; word-break: break-word; }
+  .case .ctx-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+  .ctx-card {
+    background: rgba(7,9,15,0.5); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; font-size: 11.5px; color: var(--text-mute);
+    font-family: "JetBrains Mono", monospace; line-height: 1.5;
+    max-height: 140px; overflow: auto;
+  }
+
+  .case .metrics-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 12px; }
+  .case .metrics-table th { padding: 8px 10px; color: var(--text-dim); font-weight: 500; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--line-2); }
+  .case .metrics-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .case .metrics-table .num { font-family: "JetBrains Mono", monospace; text-align: right; font-weight: 600; }
+  .case .metrics-table .reason { color: var(--text-mute); font-size: 11.5px; line-height: 1.5; max-width: 540px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot.good { background: var(--good); box-shadow: 0 0 10px var(--good); }
+  .dot.bad { background: var(--bad); box-shadow: 0 0 10px var(--bad); }
+
+  .empty { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+  .empty .em { font-size: 42px; margin-bottom: 10px; opacity: 0.5; }
+
+  /* tooltip */
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute; transform: translate(-50%, calc(-100% - 6px));
+    background: var(--bg-3); color: var(--text); padding: 6px 10px;
+    border-radius: 6px; font-size: 11px; white-space: nowrap;
+    box-shadow: var(--shadow); border: 1px solid var(--line-2); pointer-events: none;
+    z-index: 10;
+  }
+
+  @media (max-width: 1180px) {
+    .kpis { grid-template-columns: repeat(3, 1fr); }
+    .row, .row.three { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-mark">D</div>
+      <div class="logo-text">
+        <div class="t1">DeepEval Dashboard</div>
+        <div class="t2" id="genAt">—</div>
+      </div>
+    </div>
+    <div class="pill-group">
+      <span class="pill live"><span class="label">mode</span> <span class="val" id="mMode">—</span></span>
+      <span class="pill"><span class="label">judge</span> <span class="val" id="mJudge">—</span></span>
+      <span class="pill"><span class="label">generator</span> <span class="val" id="mGen">—</span></span>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="tabs" id="tabs"></div>
+
+  <main id="content"></main>
+
+</div>
+
+<script id="deepeval-data" type="application/json">__DEEPEVAL_DATA_PLACEHOLDER__</script>
+
+<script>
+  const DATA = JSON.parse(document.getElementById("deepeval-data").textContent);
+  const $ = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+
+  const fmt = {
+    pct: (v) => `${(v * 100).toFixed(0)}%`,
+    score: (v) => v == null ? "—" : v.toFixed(2),
+    int: (v) => Number(v).toLocaleString(),
+    ms: (v) => `${Math.round(v)} ms`,
+  };
+  const cls = (v, isPct) => {
+    const x = isPct ? v : v;
+    if (x >= 0.75) return "good";
+    if (x >= 0.5) return "mid";
+    return "bad";
+  };
+  const heatColor = (s, success) => {
+    if (s == null) return "rgba(148,163,184,0.18)";
+    // gradient red→amber→emerald
+    const hue = Math.round(s * 130);   // 0=red(0), 1=green(130)
+    const sat = 70;
+    const lum = 38 + s * 10;
+    return `hsl(${hue} ${sat}% ${lum}%)`;
+  };
+
+  function renderHeader() {
+    const c = DATA.config || {};
+    $("#mMode").textContent = c.mode || "—";
+    $("#mJudge").textContent = c.judge_model || "—";
+    $("#mGen").textContent = c.generator_model || "—";
+    $("#genAt").textContent = `Generated ${DATA.generated_at}`;
+  }
+
+  function renderKpis() {
+    const o = DATA.overall || {};
+    const items = [
+      { lbl: "Total cases", v: fmt.int(o.case_count || 0), sub: `${DATA.suites.length} suite(s)`, cls: "" },
+      { lbl: "Metric evals", v: fmt.int(o.metric_evals || 0), sub: "judged datapoints", cls: "primary" },
+      { lbl: "Avg score", v: fmt.score(o.avg_score), sub: "0.0 → 1.0", cls: "good" },
+      { lbl: "Pass rate", v: fmt.pct(o.pass_rate || 0), sub: "vs metric thresholds", cls: o.pass_rate >= 0.7 ? "good" : "" },
+      { lbl: "Avg latency", v: fmt.ms(o.avg_latency_ms || 0), sub: "API roundtrip", cls: "" },
+      { lbl: "Metrics tracked", v: fmt.int(o.metric_count || 0), sub: "across suites", cls: "primary" },
+    ];
+    $("#kpis").innerHTML = items.map(i => `
+      <div class="kpi ${i.cls}">
+        <div class="lbl">${i.lbl}</div>
+        <div class="v">${i.v}</div>
+        <div class="sub">${i.sub}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderTabs() {
+    const tabs = $("#tabs");
+    tabs.innerHTML = ["Overview", ...DATA.suites.map(s => s.name)].map((n, i) => `
+      <button class="tab ${i === 0 ? "active" : ""}" data-tab="${n}">
+        ${n}${n !== "Overview" ? `<span class="count">${DATA.suites.find(s => s.name === n).kpis.case_count}</span>` : ""}
+      </button>
+    `).join("");
+    $$("#tabs .tab").forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+  }
+
+  function switchTab(name) {
+    $$("#tabs .tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    if (name === "Overview") renderOverview();
+    else renderSuite(DATA.suites.find(s => s.name === name));
+  }
+
+  function renderOverview() {
+    const c = $("#content");
+    if (!DATA.suites.length) {
+      c.innerHTML = `<div class="panel empty"><div class="em">📊</div><div>No results yet — run <code>python run_all.py</code> first.</div></div>`;
+      return;
+    }
+    c.innerHTML = `
+      <div class="row three">
+        ${DATA.suites.map(s => `
+          <div class="panel">
+            <div class="panel-title">${s.name} <span class="badge">${s.kpis.case_count} cases · ${s.kpis.metric_count} metrics</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Avg score</div><div style="font-size:24px;font-weight:700;color:var(--good);">${fmt.score(s.kpis.avg_score)}</div></div>
+              <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Pass rate</div><div style="font-size:24px;font-weight:700;">${fmt.pct(s.kpis.pass_rate)}</div></div>
+              <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Latency</div><div style="font-size:18px;font-weight:600;color:var(--text-mute);">${fmt.ms(s.kpis.avg_latency_ms)}</div></div>
+              <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Evals</div><div style="font-size:18px;font-weight:600;color:var(--text-mute);">${fmt.int(s.kpis.total_metric_evals)}</div></div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="row">
+        <div class="panel"><div class="panel-title">Score distribution (combined)</div><canvas id="chart-hist" height="120"></canvas></div>
+        <div class="panel"><div class="panel-title">Pass rate by suite</div><canvas id="chart-pass" height="120"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Top metrics across suites</div>
+        ${renderMetricTable(combinedMetrics())}
+      </div>
+    `;
+
+    // charts
+    const histBins = combinedHistogram();
+    new Chart($("#chart-hist"), {
+      type: "bar",
+      data: {
+        labels: histBins.map((_, i) => `${(i / 10).toFixed(1)}-${((i + 1) / 10).toFixed(1)}`),
+        datasets: [{
+          label: "metric scores",
+          data: histBins,
+          backgroundColor: histBins.map((_, i) => `hsl(${i * 13} 70% ${42 + i * 1.5}%)`),
+          borderRadius: 6, borderSkipped: false,
+        }],
+      },
+      options: chartOpts(),
+    });
+    new Chart($("#chart-pass"), {
+      type: "bar",
+      data: {
+        labels: DATA.suites.map(s => s.name),
+        datasets: [{
+          label: "pass rate",
+          data: DATA.suites.map(s => s.kpis.pass_rate),
+          backgroundColor: ["#818cf8", "#f472b6", "#34d399", "#60a5fa"],
+          borderRadius: 8, borderSkipped: false,
+        }],
+      },
+      options: { ...chartOpts(), scales: { ...chartOpts().scales, y: { ...chartOpts().scales.y, max: 1, ticks: { ...chartOpts().scales.y.ticks, callback: v => `${(v * 100).toFixed(0)}%` } } } },
+    });
+  }
+
+  function combinedHistogram() {
+    const bins = Array(10).fill(0);
+    DATA.suites.forEach(s => s.score_histogram.forEach((n, i) => bins[i] += n));
+    return bins;
+  }
+  function combinedMetrics() {
+    const map = {};
+    DATA.suites.forEach(s => s.per_metric.forEach(m => {
+      if (!map[m.name]) map[m.name] = { name: m.name, scores: [], passes: 0, total: 0 };
+      map[m.name].scores.push(...Array(m.n).fill(m.avg)); // approximation for combined
+      map[m.name].passes += Math.round(m.pass_rate * m.n);
+      map[m.name].total += m.n;
+    }));
+    return Object.values(map).map(m => ({
+      name: m.name,
+      avg: m.scores.reduce((a, b) => a + b, 0) / Math.max(1, m.scores.length),
+      pass_rate: m.passes / Math.max(1, m.total),
+      n: m.total,
+    })).sort((a, b) => b.avg - a.avg);
+  }
+
+  function renderMetricTable(metrics) {
+    return `
+      <div class="metric-list">
+        ${metrics.map(m => {
+          const c = cls(m.avg);
+          return `
+            <div class="metric-row">
+              <div class="name">${m.name}</div>
+              <div class="num ${c}">${fmt.score(m.avg)}</div>
+              <div class="bar"><div class="${c}" style="width: ${Math.max(2, m.avg * 100)}%"></div></div>
+              <div class="num ${c}">${fmt.pct(m.pass_rate)}</div>
+              <div class="num" style="color:var(--text-dim)">n=${m.n}</div>
+            </div>`;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  function renderSuite(suite) {
+    const c = $("#content");
+    c.innerHTML = `
+      <div class="row three">
+        <div class="panel">
+          <div class="panel-title">Snapshot</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Cases</div><div style="font-size:28px;font-weight:700;">${suite.kpis.case_count}</div></div>
+            <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Metrics</div><div style="font-size:28px;font-weight:700;">${suite.kpis.metric_count}</div></div>
+            <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Avg score</div><div style="font-size:22px;font-weight:700;color:var(--good);">${fmt.score(suite.kpis.avg_score)}</div></div>
+            <div><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;">Pass rate</div><div style="font-size:22px;font-weight:700;">${fmt.pct(suite.kpis.pass_rate)}</div></div>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-title">Score distribution</div><canvas id="hist-${suite.name}" height="140"></canvas></div>
+        <div class="panel"><div class="panel-title">Latency per case</div><canvas id="lat-${suite.name}" height="140"></canvas></div>
+      </div>
+
+      <div class="row">
+        <div class="panel">
+          <div class="panel-title">Metrics performance</div>
+          ${renderMetricTable(suite.per_metric)}
+        </div>
+        <div class="panel">
+          <div class="panel-title">Top vs bottom metrics</div>
+          <canvas id="met-${suite.name}" height="280"></canvas>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Case × metric heatmap <span class="badge">cell color = score</span></div>
+        ${renderHeatmap(suite)}
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Cases (${suite.results.length})</div>
+        <div class="filters">
+          <input id="search-${suite.name}" placeholder="Search by id, input, or output…" />
+          <select id="filter-${suite.name}">
+            <option value="all">All cases</option>
+            <option value="pass">Passing (≥70%)</option>
+            <option value="fail">Failing (<70%)</option>
+          </select>
+        </div>
+        <div id="cases-${suite.name}">${renderCases(suite.results, suite)}</div>
+      </div>
+    `;
+
+    // suite charts
+    new Chart($(`#hist-${suite.name}`), {
+      type: "bar",
+      data: {
+        labels: suite.score_histogram.map((_, i) => `${(i / 10).toFixed(1)}-${((i + 1) / 10).toFixed(1)}`),
+        datasets: [{ data: suite.score_histogram, backgroundColor: suite.score_histogram.map((_, i) => `hsl(${i * 13} 70% ${42 + i * 1.5}%)`), borderRadius: 5, borderSkipped: false }],
+      },
+      options: { ...chartOpts(), plugins: { legend: { display: false } } },
+    });
+    new Chart($(`#lat-${suite.name}`), {
+      type: "line",
+      data: {
+        labels: suite.results.map(r => r.case_id),
+        datasets: [{
+          data: suite.results.map(r => r.latency_ms),
+          borderColor: "#818cf8",
+          backgroundColor: "rgba(129,140,248,0.18)",
+          fill: true, tension: 0.32, pointBackgroundColor: "#818cf8", pointRadius: 3,
+        }],
+      },
+      options: { ...chartOpts(), plugins: { legend: { display: false } } },
+    });
+    new Chart($(`#met-${suite.name}`), {
+      type: "bar",
+      data: {
+        labels: suite.per_metric.map(m => m.name.length > 22 ? m.name.slice(0, 22) + "…" : m.name),
+        datasets: [{
+          data: suite.per_metric.map(m => m.avg),
+          backgroundColor: suite.per_metric.map(m => m.avg >= 0.75 ? "#10b981" : m.avg >= 0.5 ? "#f59e0b" : "#ef4444"),
+          borderRadius: 5, borderSkipped: false,
+        }],
+      },
+      options: { ...chartOpts(), indexAxis: "y", plugins: { legend: { display: false } }, scales: { ...chartOpts().scales, x: { ...chartOpts().scales.y, max: 1 }, y: { ...chartOpts().scales.x, ticks: { ...chartOpts().scales.x.ticks, font: { size: 10 } } } } },
+    });
+
+    // filters
+    const wireFilter = () => {
+      const q = $(`#search-${suite.name}`).value.toLowerCase();
+      const filt = $(`#filter-${suite.name}`).value;
+      const filtered = suite.results.filter(r => {
+        const blob = `${r.case_id} ${r.input} ${r.actual_output}`.toLowerCase();
+        if (q && !blob.includes(q)) return false;
+        if (filt === "pass" && r.case_pass_rate < 0.7) return false;
+        if (filt === "fail" && r.case_pass_rate >= 0.7) return false;
+        return true;
+      });
+      $(`#cases-${suite.name}`).innerHTML = renderCases(filtered, suite);
+    };
+    $(`#search-${suite.name}`).oninput = wireFilter;
+    $(`#filter-${suite.name}`).onchange = wireFilter;
+  }
+
+  function renderHeatmap(suite) {
+    const names = suite.metric_names;
+    return `
+      <div class="heatmap"><table>
+        <thead><tr>
+          <th class="case-col">Case</th>
+          ${names.map(n => `<th>${n.length > 28 ? n.slice(0,28)+'…' : n}</th>`).join("")}
+        </tr></thead>
+        <tbody>
+        ${suite.heatmap_rows.map(row => `
+          <tr>
+            <td class="case-cell"><span class="cid">${row.case_id}</span>${escapeHtml(row.input)}</td>
+            ${row.scores.map(c => {
+              const s = c.score;
+              const txt = s == null ? "—" : s.toFixed(2);
+              return `<td><div class="heat-cell" data-tip="${s == null ? 'no score' : 'score '+s.toFixed(2)+(c.success ? ' (pass)' : ' (fail)')}" style="background:${heatColor(s, c.success)}">${txt}</div></td>`;
+            }).join("")}
+          </tr>
+        `).join("")}
+        </tbody>
+      </table></div>
+    `;
+  }
+
+  function renderCases(results, suite) {
+    if (!results.length) return `<div class="empty"><div class="em">🔍</div>No matching cases.</div>`;
+    return results.map(r => {
+      const passCls = r.case_pass_rate >= 0.7 ? "good" : r.case_pass_rate >= 0.5 ? "mid" : "bad";
+      return `
+        <details class="case">
+          <summary>
+            <span class="cid">${r.case_id}</span>
+            <span class="qpre">${escapeHtml(r.input)}</span>
+            <span class="case-pass ${passCls}">${fmt.score(r.case_avg)} · ${fmt.pct(r.case_pass_rate)}</span>
+            <span class="case-lat">${fmt.ms(r.latency_ms || 0)}</span>
+          </summary>
+          <div class="body">
+            ${r.error ? `<div class="qa" style="border-left-color:var(--bad);"><div class="ql">Error</div><div class="qb" style="color:var(--bad);">${escapeHtml(r.error)}</div></div>` : ""}
+            <div class="qa input"><div class="ql">Input</div><div class="qb">${escapeHtml(r.input)}</div></div>
+            <div class="qa actual"><div class="ql">Actual output</div><div class="qb">${escapeHtml(r.actual_output)}</div></div>
+            ${r.expected_output ? `<div class="qa expected"><div class="ql">Expected output</div><div class="qb">${escapeHtml(r.expected_output)}</div></div>` : ""}
+            ${(r.retrieval_context && r.retrieval_context.length) ? `
+              <div class="qa" style="border-left-color: #c084fc;">
+                <div class="ql">Retrieved context (${r.retrieval_context.length})</div>
+                <div class="ctx-list">
+                  ${r.retrieval_context.map(t => `<div class="ctx-card">${escapeHtml((t || '').slice(0, 320))}${t && t.length > 320 ? '…' : ''}</div>`).join("")}
+                </div>
+              </div>` : ""}
+            <table class="metrics-table">
+              <thead><tr><th>Metric</th><th class="num">Score</th><th class="num">Threshold</th><th>Reason</th></tr></thead>
+              <tbody>
+                ${(r.metrics || []).map(m => {
+                  const c = m.success ? "good" : "bad";
+                  return `<tr>
+                    <td><span class="dot ${c}"></span>${m.name}</td>
+                    <td class="num" style="color:${m.success ? 'var(--good)' : 'var(--bad)'};">${fmt.score(m.score)}</td>
+                    <td class="num" style="color:var(--text-dim);">${m.threshold == null ? "—" : m.threshold.toFixed(2)}</td>
+                    <td class="reason">${escapeHtml((m.reason || "").slice(0, 360))}${(m.reason || "").length > 360 ? "…" : ""}</td>
+                  </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      `;
+    }).join("");
+  }
+
+  function chartOpts() {
+    return {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: "#0d1117", titleColor: "#e2e8f0", bodyColor: "#94a3b8", borderColor: "rgba(148,163,184,0.2)", borderWidth: 1, padding: 10, displayColors: false } },
+      scales: {
+        x: { grid: { color: "rgba(148,163,184,0.06)" }, ticks: { color: "#64748b", font: { size: 10 } } },
+        y: { grid: { color: "rgba(148,163,184,0.06)" }, ticks: { color: "#64748b", font: { size: 10 } } },
+      },
+    };
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  // boot
+  renderHeader();
+  renderKpis();
+  renderTabs();
+  renderOverview();
+</script>
+</body>
+</html>

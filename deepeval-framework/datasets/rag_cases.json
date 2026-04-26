@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rag-001",
+    "input": "How long do I have to return the Aurora headphones?",
+    "expected_output": "30 days from delivery. The holiday window extends through January 31 for orders placed Nov 1 to Dec 24.",
+    "expected_retrieval_keywords": ["return", "30 days", "delivery"],
+    "category": "returns"
+  },
+  {
+    "id": "rag-002",
+    "input": "Does the Cloud Memory Foam Pillow have a return restriction?",
+    "expected_output": "Yes — once removed from sealed packaging, the Cloud Memory Foam Pillow is not eligible for return for hygiene reasons.",
+    "expected_retrieval_keywords": ["pillow", "hygiene", "sealed"],
+    "category": "returns_exception"
+  },
+  {
+    "id": "rag-003",
+    "input": "What countries do you NOT ship to?",
+    "expected_output": "Cuba, Iran, North Korea, Syria, Russia, Belarus, Crimea, and any country sanctioned by OFAC.",
+    "expected_retrieval_keywords": ["sanctioned", "OFAC"],
+    "category": "shipping_restrictions"
+  },
+  {
+    "id": "rag-004",
+    "input": "How much does overnight shipping cost and what's the cutoff?",
+    "expected_output": "Overnight shipping is $29.99 flat with a 12 PM Pacific cutoff for same-business-day shipping.",
+    "expected_retrieval_keywords": ["overnight", "29.99", "12 PM"],
+    "category": "shipping"
+  },
+  {
+    "id": "rag-005",
+    "input": "What is the warranty period for the Nimbus smartwatch?",
+    "expected_output": "The Nimbus Smart Watch Series 5 carries a 2-year manufacturer warranty.",
+    "expected_retrieval_keywords": ["Nimbus", "2-year", "warranty"],
+    "category": "warranty"
+  },
+  {
+    "id": "rag-006",
+    "input": "How much is paid battery service for the headphones after warranty?",
+    "expected_output": "Paid battery service for the headphones is $59 after the warranty period.",
+    "expected_retrieval_keywords": ["battery", "59", "headphones"],
+    "category": "warranty_service"
+  },
+  {
+    "id": "rag-007",
+    "input": "What's a ShopMate Point worth?",
+    "expected_output": "100 ShopMate Points equal $1 in store credit. You earn 1 point per dollar spent.",
+    "expected_retrieval_keywords": ["points", "100", "store credit"],
+    "category": "loyalty"
+  },
+  {
+    "id": "rag-008",
+    "input": "Where are your fulfillment centers?",
+    "expected_output": "Reno, Nevada and Atlanta, Georgia.",
+    "expected_retrieval_keywords": ["Reno", "Atlanta", "fulfillment"],
+    "category": "company"
+  },
+  {
+    "id": "rag-009",
+    "input": "Which retailers do you price-match?",
+    "expected_output": "Amazon, Best Buy, Walmart, Target, and B&H Photo. Submit within 14 days of purchase.",
+    "expected_retrieval_keywords": ["price match", "Amazon", "14 days"],
+    "category": "policy"
+  },
+  {
+    "id": "rag-010",
+    "input": "How do refunds get issued to PayPal?",
+    "expected_output": "Refunds to PayPal are issued within 1 to 3 business days after we process the refund.",
+    "expected_retrieval_keywords": ["PayPal", "1 to 3", "refund"],
+    "category": "refunds"
+  }
+]

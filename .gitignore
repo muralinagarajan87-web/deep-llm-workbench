@@ -1,0 +1,33 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Dependencies ---
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# --- Build artifacts ---
+dist/
+build/
+*.log
+
+# --- Local data / runtime ---
+chroma_db/
+deepeval-framework/reports/*.html
+deepeval-framework/reports/*.json
+.deepeval*
+
+# --- IDE / OS ---
+.DS_Store
+.vscode/
+.idea/
+.playwright-mcp/
+
+# --- Tmp / dev logs ---
+/tmp/*
+*.tmp
+

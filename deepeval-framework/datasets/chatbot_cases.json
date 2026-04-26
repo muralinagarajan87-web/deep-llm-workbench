@@ -1,0 +1,96 @@
+[
+  {
+    "id": "cb-001",
+    "input": "What audio products do you have under $100?",
+    "expected_output": "The Pulse Bluetooth Speaker (P003) at $79.99 is the only audio product under $100.",
+    "context": [
+      "Aurora Wireless Headphones (P001): $149.99, Audio.",
+      "Pulse Bluetooth Speaker (P003): $79.99, Audio."
+    ],
+    "category": "product_recommendation"
+  },
+  {
+    "id": "cb-002",
+    "input": "How long does standard shipping take?",
+    "expected_output": "Standard shipping takes 3 to 5 business days and is free on orders over $50.",
+    "context": [
+      "Standard shipping is free on orders over $50 and takes 3-5 business days."
+    ],
+    "category": "policy_shipping"
+  },
+  {
+    "id": "cb-003",
+    "input": "What is your return window?",
+    "expected_output": "Returns are accepted within 30 days of delivery; items must be unused and in original packaging.",
+    "context": [
+      "Returns are accepted within 30 days of delivery. Items must be unused and in original packaging."
+    ],
+    "category": "policy_returns"
+  },
+  {
+    "id": "cb-004",
+    "input": "Compare the Aurora headphones and Pulse speaker.",
+    "expected_output": "Aurora Wireless Headphones (P001) are $149.99 over-ear ANC headphones with 40h battery. Pulse Bluetooth Speaker (P003) is a $79.99 portable waterproof speaker with 24h playback. Headphones are personal listening; speaker is for shared/outdoor use.",
+    "context": [
+      "Aurora Wireless Headphones (P001): $149.99, over-ear ANC, 40h battery.",
+      "Pulse Bluetooth Speaker (P003): $79.99, IPX7, 24h playback."
+    ],
+    "category": "product_comparison"
+  },
+  {
+    "id": "cb-005",
+    "input": "Do you sell laptops?",
+    "expected_output": "We do not currently carry laptops. Our computing peripherals include the Forge Mechanical Keyboard and the Glide Wireless Mouse Pro.",
+    "context": [
+      "Catalog includes: Forge Mechanical Keyboard, Glide Wireless Mouse Pro. No laptops."
+    ],
+    "category": "out_of_catalog"
+  },
+  {
+    "id": "cb-006",
+    "input": "What is the price of the Nimbus smartwatch?",
+    "expected_output": "The Nimbus Smart Watch Series 5 (P002) is $299.00.",
+    "context": [
+      "Nimbus Smart Watch Series 5 (P002): $299.00."
+    ],
+    "category": "factual"
+  },
+  {
+    "id": "cb-007",
+    "input": "Write me a recipe for chocolate cake.",
+    "expected_output": "I'm a shopping assistant, so I can't help with recipes — but I'd love to help you find products. Want me to suggest something?",
+    "context": [
+      "Off-topic for an e-commerce assistant."
+    ],
+    "category": "off_topic_refusal"
+  },
+  {
+    "id": "cb-008",
+    "input": "Recommend a setup for a home office under $700.",
+    "expected_output": "Pair the Zen Ergonomic Office Chair (P005, $419), the Lumen LED Desk Lamp (P006, $49.99), and the Forge Mechanical Keyboard (P007, $139). Total: $607.99.",
+    "context": [
+      "Zen Ergonomic Office Chair (P005): $419.",
+      "Lumen LED Desk Lamp (P006): $49.99.",
+      "Forge Mechanical Keyboard (P007): $139."
+    ],
+    "category": "bundle_recommendation"
+  },
+  {
+    "id": "cb-009",
+    "input": "What payment methods do you accept?",
+    "expected_output": "We accept Visa, Mastercard, American Express, Discover, PayPal, Apple Pay, Google Pay, and Shop Pay.",
+    "context": [
+      "Payment: Visa, Mastercard, AmEx, Discover, PayPal, Apple Pay, Google Pay, Shop Pay."
+    ],
+    "category": "policy_payment"
+  },
+  {
+    "id": "cb-010",
+    "input": "Is the Aurora headphone covered by warranty?",
+    "expected_output": "Yes — the Aurora Wireless Headphones (P001) come with a 1-year manufacturer warranty.",
+    "context": [
+      "Aurora Wireless Headphones (P001): 1-year manufacturer warranty."
+    ],
+    "category": "policy_warranty"
+  }
+]

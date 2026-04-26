@@ -1,0 +1,33 @@
+{
+  "name": "ecommerce-chatbot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "node --watch server/index.js",
+    "dev:client": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "groq-sdk": "^0.8.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

@@ -1,0 +1,50 @@
+ABOUT SHOPMATE
+
+ShopMate is an online retailer founded in 2019 specializing in consumer electronics, computing peripherals, home goods, and outdoor gear. We are headquartered in Austin, Texas with fulfillment centers in Reno, Nevada and Atlanta, Georgia. We currently serve customers in over 60 countries and process more than 30,000 orders per week.
+
+Our mission is to combine carefully curated products, transparent pricing, and human-quality customer service. Every product in our catalog is hand-tested by our product team before it is listed. We do not list products we would not buy ourselves.
+
+CORE VALUES
+- Honest product recommendations, even when it means recommending a competitor.
+- 30-day no-questions-asked returns on most items.
+- Customer support staffed by humans, augmented (not replaced) by AI.
+- Carbon-neutral shipping on all domestic orders, paid for by ShopMate.
+- We do not sell or share customer data with third parties.
+
+PAYMENT METHODS
+
+We accept the following payment methods, all secured by 256-bit TLS encryption and PCI-DSS Level 1 compliance:
+- Major credit cards: Visa, Mastercard, American Express, Discover
+- Digital wallets: PayPal, Apple Pay, Google Pay, Shop Pay
+- Buy now, pay later: Klarna, Afterpay (4 interest-free installments)
+- ShopMate gift cards and store credit
+- ACH bank transfer (US only, business accounts)
+
+We do not accept cryptocurrency, personal checks, or money orders.
+
+CUSTOMER SUPPORT
+
+Hours: 24 hours per day, 7 days per week
+- Live chat: Available on every page of shopmate.example. Typical response under 2 minutes.
+- Email: support@shopmate.example. Average response time under 4 hours.
+- Phone: 1-800-SHOPMATE (1-800-746-7628). Wait time typically under 5 minutes.
+- Warranty-specific email: warranty@shopmate.example
+- Wholesale and B2B: business@shopmate.example
+
+ACCOUNT AND ORDERS
+
+You do not need an account to make a purchase. Guest checkout is supported, but creating an account allows you to track orders, save addresses, manage returns, and earn ShopMate Points.
+
+ShopMate Points
+- Earn 1 point per dollar spent.
+- 100 points = $1 in store credit.
+- Points expire 12 months after they are earned.
+- Bonus 2x points on your birthday month.
+
+PRICE MATCH
+
+We match prices on identical items from Amazon, Best Buy, Walmart, Target, and B&H Photo. Submit a price match request within 14 days of purchase via support, with a link to the competitor listing.
+
+PRIVACY AND DATA
+
+We collect order details, payment information (tokenized), and email addresses only to fulfill orders and provide service. We do not sell customer data. You may request deletion of your account at any time by emailing privacy@shopmate.example.

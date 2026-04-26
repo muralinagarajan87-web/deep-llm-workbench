@@ -1,0 +1,162 @@
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+  background: #0b1220;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: 56px 1fr;
+  grid-template-areas: "topbar topbar" "sidebar main";
+  height: 100vh;
+}
+
+.topbar {
+  grid-area: topbar;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(148,163,184,0.12);
+  display: flex; align-items: center; padding: 0 22px; gap: 18px;
+}
+.logo {
+  font-size: 16px; font-weight: 700;
+  background: linear-gradient(135deg,#34d399,#60a5fa);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.topbar .stats { font-size: 12px; color: #94a3b8; display: flex; gap: 14px; }
+.topbar .stats b { color: #cbd5e1; font-weight: 600; }
+.tabs { margin-left: auto; display: flex; gap: 4px; }
+.tab {
+  padding: 6px 14px; font-size: 13px; border-radius: 6px; cursor: pointer;
+  background: transparent; border: 1px solid transparent; color: #94a3b8;
+}
+.tab.active { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.3); color: #93c5fd; }
+
+.sidebar {
+  grid-area: sidebar;
+  background: #0f172a; border-right: 1px solid rgba(148,163,184,0.1);
+  padding: 18px; overflow-y: auto;
+}
+.section-title {
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #64748b; margin: 6px 0 10px; font-weight: 600;
+}
+
+.btn {
+  width: 100%; padding: 10px 12px; background: linear-gradient(135deg,#3b82f6,#6366f1);
+  color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
+  font-size: 13px; margin-bottom: 8px;
+}
+.btn.ghost {
+  background: transparent; border: 1px solid rgba(148,163,184,0.25); color: #cbd5e1; font-weight: 500;
+}
+.btn.danger { background: linear-gradient(135deg,#ef4444,#f97316); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.upload {
+  border: 2px dashed rgba(96,165,250,0.3); border-radius: 10px;
+  padding: 18px; text-align: center; margin-bottom: 12px;
+  background: rgba(15,23,42,0.5); cursor: pointer; transition: all 0.15s;
+}
+.upload:hover { border-color: #60a5fa; background: rgba(96,165,250,0.05); }
+.upload input { display: none; }
+.upload .label { font-size: 12px; color: #94a3b8; }
+.upload .icon { font-size: 22px; color: #60a5fa; margin-bottom: 4px; }
+
+.source-list { display: flex; flex-direction: column; gap: 4px; }
+.source-item {
+  padding: 8px 10px; background: rgba(30,41,59,0.6); border-radius: 6px;
+  font-size: 12px; cursor: pointer; border: 1px solid transparent;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.source-item:hover { border-color: rgba(96,165,250,0.3); }
+.source-item.active { border-color: #60a5fa; background: rgba(96,165,250,0.1); }
+.source-item .count { color: #64748b; font-size: 11px; }
+
+.main { grid-area: main; overflow: hidden; display: flex; flex-direction: column; }
+
+.chunks-pane {
+  flex: 1; overflow-y: auto; padding: 18px 22px;
+}
+.chunks-pane .empty {
+  display: flex; align-items: center; justify-content: center; height: 100%;
+  color: #64748b; flex-direction: column; gap: 10px;
+}
+.chunks-pane .empty .em { font-size: 38px; opacity: 0.4; }
+
+.chunk {
+  background: #1e293b; border: 1px solid rgba(148,163,184,0.1);
+  border-radius: 8px; padding: 14px; margin-bottom: 10px;
+}
+.chunk header {
+  display: flex; gap: 12px; font-size: 11px; color: #94a3b8;
+  margin-bottom: 8px; flex-wrap: wrap; align-items: center;
+}
+.chunk header .src { color: #34d399; font-weight: 600; }
+.chunk header .idx { color: #a78bfa; }
+.chunk pre {
+  white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12.5px; line-height: 1.55; margin: 0; color: #cbd5e1;
+}
+
+.chat-pane { display: flex; flex-direction: column; height: 100%; }
+.chat-msgs {
+  flex: 1; overflow-y: auto; padding: 18px 22px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.bubble {
+  max-width: 760px; padding: 12px 16px; border-radius: 12px; line-height: 1.55;
+  font-size: 14px;
+}
+.bubble.user {
+  align-self: flex-end; background: linear-gradient(135deg,#3b82f6,#6366f1); color: white;
+}
+.bubble.bot {
+  align-self: flex-start; background: #1e293b;
+  border: 1px solid rgba(148,163,184,0.15);
+}
+.bubble.bot p:first-child { margin-top: 0; }
+.bubble.bot p:last-child { margin-bottom: 0; }
+
+.retrieved {
+  align-self: flex-start; max-width: 760px;
+  background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2);
+  border-radius: 8px; padding: 8px 12px; font-size: 11.5px;
+}
+.retrieved summary { cursor: pointer; color: #34d399; font-weight: 600; }
+.retrieved .ctx-item {
+  margin-top: 6px; padding: 6px 8px; background: rgba(15,23,42,0.5);
+  border-radius: 4px; font-family: ui-monospace, monospace; font-size: 11px;
+  color: #cbd5e1; border-left: 2px solid #34d399;
+}
+.retrieved .ctx-meta { color: #64748b; font-size: 10px; margin-bottom: 2px; }
+
+.composer {
+  padding: 14px 22px; border-top: 1px solid rgba(148,163,184,0.1);
+  display: flex; gap: 10px; background: #0f172a;
+}
+.composer input {
+  flex: 1; padding: 12px 14px; background: rgba(30,41,59,0.6);
+  border: 1px solid rgba(148,163,184,0.2); border-radius: 8px;
+  color: #e2e8f0; font-size: 14px; outline: none;
+}
+.composer input:focus { border-color: #60a5fa; }
+.composer button {
+  padding: 0 22px; background: linear-gradient(135deg,#3b82f6,#6366f1);
+  color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+}
+.composer button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.toast {
+  position: fixed; bottom: 22px; right: 22px;
+  background: #1e293b; border: 1px solid rgba(148,163,184,0.25);
+  padding: 10px 14px; border-radius: 8px; font-size: 12.5px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: slidein 0.2s ease-out;
+}
+.toast.success { border-color: rgba(52,211,153,0.4); color: #34d399; }
+.toast.error { border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+@keyframes slidein { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

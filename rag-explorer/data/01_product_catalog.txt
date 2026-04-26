@@ -1,0 +1,107 @@
+SHOPMATE PRODUCT CATALOG — SPRING 2026
+
+=== AUDIO ===
+
+Aurora Wireless Headphones (SKU: P001)
+Price: $149.99
+Category: Audio / Over-ear
+Description: Premium over-ear noise-cancelling headphones with 40-hour battery life and memory-foam leather cushions. Bluetooth 5.3, multipoint pairing, ANC depth -32dB, transparency mode, custom EQ via the ShopMate app.
+Stock: 23 units (Warehouse: Reno, NV)
+Warranty: 1-year manufacturer
+Color options: Midnight Black, Pearl White, Sage Green
+Customer rating: 4.6 / 5 (1,247 reviews)
+
+Pulse Bluetooth Speaker (SKU: P003)
+Price: $79.99
+Category: Audio / Portable
+Description: Compact IPX7 waterproof speaker with 360-degree sound, 24-hour playback, USB-C fast charge, party-link pairing for stereo or multi-room. Built-in mic for hands-free calls.
+Stock: 47 units (Warehouse: Atlanta, GA)
+Warranty: 1-year manufacturer
+Color options: Slate, Coral, Lemon
+Customer rating: 4.5 / 5 (892 reviews)
+
+=== WEARABLES ===
+
+Nimbus Smart Watch Series 5 (SKU: P002)
+Price: $299.00
+Category: Wearables / Smartwatch
+Description: Health-focused smartwatch with FDA-cleared ECG, SpO2 monitoring, dual-band GPS, sleep staging, 7-day battery life, sapphire crystal display, 50m water resistance.
+Stock: 12 units (Warehouse: Reno, NV)
+Warranty: 2-year manufacturer
+Strap options: Sport silicone, Woven nylon, Stainless milanese
+Customer rating: 4.4 / 5 (2,103 reviews)
+
+=== CAMERAS ===
+
+Ember 4K Action Camera (SKU: P004)
+Price: $249.00
+Category: Cameras / Action
+Description: Rugged action camera shooting 4K at 120fps, HyperSteady gyro stabilization, 10m waterproof without case, voice control, removable battery, dual-mic noise cancellation.
+Stock: 8 units (Warehouse: Reno, NV)
+Warranty: 1-year manufacturer
+Color options: Carbon Black only
+Customer rating: 4.7 / 5 (566 reviews)
+
+=== FURNITURE ===
+
+Zen Ergonomic Office Chair (SKU: P005)
+Price: $419.00
+Category: Furniture / Seating
+Description: Mesh-back chair with 4D-adjustable armrests, dynamic lumbar support, headrest, polished aluminum base, BIFMA-certified for users up to 300 lbs.
+Stock: 5 units (Warehouse: Atlanta, GA)
+Warranty: 5-year structural
+Color options: Onyx, Granite, Ivory
+Customer rating: 4.8 / 5 (340 reviews)
+
+=== HOME ===
+
+Lumen LED Desk Lamp (SKU: P006)
+Price: $49.99
+Category: Home / Lighting
+Description: Dimmable 12W LED desk lamp with 5 color temperatures (2700K-6500K), Qi wireless charging base, USB-C 18W passthrough port, touch controls, memory mode.
+Stock: 60 units (Warehouse: Atlanta, GA)
+Warranty: 2-year manufacturer
+Color options: Matte Black, Silver
+Customer rating: 4.3 / 5 (1,012 reviews)
+
+=== COMPUTING ===
+
+Forge Mechanical Keyboard (SKU: P007)
+Price: $139.00
+Category: Computing / Peripherals
+Description: 75% layout, hot-swappable switches (ships with Gateron Yellow), PBT double-shot keycaps, gasket-mount build, south-facing RGB, USB-C detachable cable, VIA-compatible.
+Stock: 18 units (Warehouse: Reno, NV)
+Warranty: 1-year manufacturer
+Color options: Graphite, Stone White
+Customer rating: 4.6 / 5 (728 reviews)
+
+Glide Wireless Mouse Pro (SKU: P008)
+Price: $89.00
+Category: Computing / Peripherals
+Description: 60-gram esports mouse, 8000Hz polling rate, PAW3950 sensor up to 30,000 DPI, 90-hour battery, optical switches rated for 100M clicks.
+Stock: 32 units (Warehouse: Reno, NV)
+Warranty: 1-year manufacturer
+Color options: Black, White
+Customer rating: 4.5 / 5 (459 reviews)
+
+=== OUTDOOR ===
+
+Trail Insulated Water Bottle (SKU: P009)
+Price: $34.99
+Category: Outdoor / Hydration
+Description: 32oz double-walled stainless steel bottle. Keeps drinks cold for 24 hours or hot for 12 hours. Leak-proof flip cap. Dishwasher-safe.
+Stock: 80 units (Warehouse: Atlanta, GA)
+Warranty: Lifetime against manufacturing defects
+Color options: Pine, Slate, Sand, Berry
+Customer rating: 4.7 / 5 (3,201 reviews)
+
+=== BEDDING ===
+
+Cloud Memory Foam Pillow (SKU: P010)
+Price: $59.00
+Category: Bedding / Pillows
+Description: Cooling-gel-infused memory foam pillow with washable bamboo-blend cover. CertiPUR-US certified. Available in standard and king sizes.
+Stock: 25 units (Warehouse: Atlanta, GA)
+Warranty: 90-day defect warranty
+Color options: White only
+Customer rating: 4.4 / 5 (876 reviews)
