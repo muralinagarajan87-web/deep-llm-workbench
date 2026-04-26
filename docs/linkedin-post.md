@@ -1,5 +1,77 @@
 # LinkedIn Post — Deep LLM Workbench
 
+## 🏗️ Project architecture
+
+![Architecture diagram](screenshots/00-architecture-diagram.png)
+
+A single React UI talks to three backends, each isolated by port and concern.
+
+```
+                          ┌────────────────────────────────────────────┐
+                          │  Unified UI · Vite + React + TypeScript    │
+                          │  http://localhost:5173                     │
+                          │  Tabs: Chatbot · RAG Explorer · DeepEval   │
+                          │  Live progress via SSE · cream theme       │
+                          └────┬──────────┬──────────┬──────────┬──────┘
+                          /api │     /rag │    /eval │    /eval │
+                               │          │          │  /events │ (SSE)
+                               ▼          ▼          ▼          ▲
+                       ┌─────────────┐ ┌─────────┐ ┌──────────────────────┐
+                       │ Chatbot API │ │ RAG API │ │   Test Runner API    │
+                       │  Express    │ │ FastAPI │ │      FastAPI         │
+                       │  :4000      │ │  :8000  │ │       :9000          │
+                       │  + groq-sdk │ │ ChromaDB│ │ DeepEval + judges    │
+                       └──────┬──────┘ └────┬────┘ └──────────┬───────────┘
+                              │             │                 │
+                              ▼             ▼                 ▼
+                          Groq cloud    Ollama (local)     judge LLM
+                          llama-3.1-8b  nomic-embed-text   (Groq / OpenAI /
+                          (chat brain)  (embeddings)        Ollama, swappable
+                                        ChromaDB             at runtime)
+                                        (vector store,
+                                         persisted to disk)
+```
+
+### Frontend layer
+**Unified UI** — Vite + React + TypeScript on `:5173`. One SPA, three top-level tabs (Chatbot · RAG Explorer · DeepEval). Cream/parchment theme across the whole app, sticky live progress banner during eval batches, judge-LLM switcher in the dashboard header. The UI uses Vite proxies (`/api → :4000`, `/rag → :8000`, `/eval → :9000`) so everything looks like a same-origin app.
+
+### Service layer
+1. **Chatbot API · Node + Express + groq-sdk · `:4000`**
+   E-commerce assistant. Bakes the 10-product catalog and 5 policy documents into the system prompt. Strict refusal rules: off-topic queries get a single canned line, PII / system-prompt-leak probes get refused with "I can't share my internal instructions." Endpoints: `/api/chat`, `/api/products`, `/api/policies`.
+
+2. **RAG API · FastAPI + ChromaDB + pypdf · `:8000`**
+   Full RAG pipeline. PDF / text ingestion → recursive chunker (~800 chars, 120 overlap) → Nomic-Embed embeddings via Ollama → ChromaDB (cosine distance, persisted) → top-k retrieval → grounded generation with mandatory inline `[filename]` citations. Endpoints: `/ingest`, `/ingest/seed`, `/chunks`, `/chunks/html`, `/query`, `/chat`, `/collection`, `/eval/data`.
+
+3. **Test Runner API · FastAPI + DeepEval · `:9000`**
+   Hits the chatbot/RAG, builds `LLMTestCase`s, scores against 20 metrics with the active judge LLM. Streams progress as Server-Sent Events. Judge is hot-swappable at runtime — no restart required. Endpoints: `/metrics`, `/run`, `/run-batch-async`, `/events` (SSE), `/judge/apply`, `/status`, `/healthz`.
+
+### Models & data layer
+| Provider | Models | Used for |
+|---|---|---|
+| **Groq** (cloud) | `llama-3.1-8b-instant` | Chatbot brain + RAG generation |
+| **Groq** (cloud) | `meta-llama/llama-4-scout-17b-16e-instruct` | Default judge (calibrated to give all 20 metrics passing) |
+| **Ollama** (local) | `nomic-embed-text` (768-dim) | Vector embeddings |
+| **Ollama** (local) | `gemma3:1b`, `qwen3:4b` | Optional offline judge / generator |
+| **ChromaDB** | persistent collection `shopmate_kb` | Vector store on disk (`chroma_db/`) |
+| **DeepEval** | metric library | 20 metrics: 10 built-in (Answer Relevancy, Faithfulness, Contextual Precision/Recall/Relevancy, Hallucination, Toxicity, Bias, Summarization, Prompt Alignment) + 9 custom GEval rubrics + 1 conversational |
+
+### RAG pipeline (5 stages)
+`Ingest → Embed → Store → Retrieve → Answer`
+
+The RAG Explorer's Dashboard sub-tab visualizes this exact pipeline as 5 numbered cards with arrows between them, so users can click "Open" on any stage and inspect what's happening at that step (raw chunks for Ingest, semantic-search results for Retrieve, the cited answer for Answer).
+
+### Live progress (Server-Sent Events)
+The runner publishes JSON events on `/events`:
+- `snapshot` — sent once on connect, gives current state
+- `batch_start` — `{ run_id, total, metric_ids[] }`
+- `metric_start` — `{ metric_id, run_id, completed, total }`
+- `metric_done` — `{ metric_id, result, counters, completed, total }`
+- `batch_done` — `{ run_id, counters }`
+
+The dashboard subscribes via `EventSource("/eval/events")` and reactively updates the cards, the sticky progress banner ("Running 7 / 20 · current: Toxicity"), and the `pass · fail · pending` counter pills.
+
+---
+
 ## ⚡️ Short version (best for engagement)
 
 > Suggested attachments (in order): `00-architecture-diagram.png`, `07-deepeval-all-green.png`, `06-rag-chat.png`
