@@ -1,0 +1,191 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Deep — Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f7f1e3;color:#1f1b16;font-family:Inter,sans-serif;padding:48px 56px}
+  .canvas{max-width:1280px;margin:0 auto}
+  .title{font-family:Lora,serif;font-size:34px;font-weight:700;letter-spacing:-0.01em;margin:0 0 6px}
+  .subtitle{color:#6b6760;font-size:15px;margin:0 0 36px}
+
+  .row{display:grid;gap:16px;margin-bottom:18px;align-items:stretch}
+  .row.lay-1{grid-template-columns:repeat(3,1fr)}
+  .row.lay-2{grid-template-columns:1fr 1fr 1fr 1fr}
+
+  .layer-tag{
+    display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:#a0967f;margin-bottom:10px;
+  }
+
+  .card{
+    background:#fefaf0;border:1px solid #e6dcc4;border-radius:14px;padding:18px 20px;
+    box-shadow:0 1px 2px rgba(31,27,22,0.04),0 6px 16px rgba(31,27,22,0.05);
+    display:flex;flex-direction:column;gap:8px;position:relative;
+  }
+  .card.user-card{background:#fbf6ea;border-style:dashed;align-items:center;justify-content:center;text-align:center;padding:22px}
+  .card .head{display:flex;align-items:center;gap:10px}
+  .icon{
+    width:36px;height:36px;border-radius:9px;background:#d27a4c;color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:14px;flex-shrink:0;
+    transform:rotate(-3deg);box-shadow:inset 0 -2px 0 rgba(0,0,0,0.18);
+  }
+  .icon.green{background:#4f8b4d}.icon.violet{background:#7c5fb6}.icon.blue{background:#5a7eb6}
+  .icon.orange{background:#d27a4c}.icon.brown{background:#9a6f4a}
+  .name{font-family:Lora,serif;font-weight:700;font-size:18px;line-height:1.15}
+  .role{color:#6b6760;font-size:12.5px;margin-top:1px}
+  .port{
+    display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11px;
+    background:#efe7d3;color:#1f1b16;padding:2px 9px;border-radius:5px;border:1px solid #e6dcc4;
+    margin-left:auto;
+  }
+  .body{color:#4d463c;font-size:13px;line-height:1.55}
+  .body code{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:#efe7d3;padding:1.5px 6px;border-radius:4px}
+  .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+  .chip{padding:2px 9px;background:#efe7d3;border:1px solid #e6dcc4;border-radius:5px;
+        font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#1f1b16}
+  .chip.green{background:#d6e8d2;color:#3f6f3d;border-color:#bcd6b8}
+
+  /* arrows row */
+  .arrows{display:grid;grid-template-columns:repeat(4,1fr);align-items:center;height:42px;margin:-4px 0 6px;color:#d27a4c;font-size:18px;font-weight:700;text-align:center}
+  .arrows .label{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#a0967f;font-weight:600;letter-spacing:.04em;text-transform:none}
+
+  .pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;background:#fefaf0;border:1px solid #e6dcc4;border-radius:12px;padding:18px 18px 14px;margin:6px 0 10px}
+  .stage{position:relative;display:flex;flex-direction:column;gap:4px}
+  .stage::after{content:"→";position:absolute;right:-8px;top:18px;color:#d27a4c;font-weight:700;font-size:16px}
+  .stage:last-child::after{display:none}
+  .stage-num{width:24px;height:24px;border-radius:50%;background:#d27a4c;color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px;margin-bottom:2px}
+  .stage h4{margin:0;font-family:Lora,serif;font-size:14px}
+  .stage p{margin:0;color:#6b6760;font-size:11px;line-height:1.4}
+
+  .footer{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:24px;padding-top:18px;border-top:1px dashed #d8cdb1;color:#6b6760;font-size:12.5px
+  }
+  .footer .url{font-family:"JetBrains Mono",monospace;color:#1f1b16}
+  .pill{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-family:Inter}
+  .pill.pass{background:#d6e8d2;color:#3f6f3d}
+</style></head>
+<body>
+<div class="canvas">
+
+  <div class="title">Deep — Unified LLM Workbench</div>
+  <div class="subtitle">A chatbot, a RAG pipeline, and a 20-metric DeepEval test runner — surfaced through one React UI.</div>
+
+  <div class="layer-tag">Frontend</div>
+  <div class="card" style="display:block">
+    <div class="head">
+      <div class="icon orange">UI</div>
+      <div>
+        <div class="name">Unified React App · Vite + TypeScript</div>
+        <div class="role">3 top-level tabs · cream theme · live SSE progress</div>
+      </div>
+      <span class="port">:5173</span>
+    </div>
+    <div class="body">
+      <code>Chatbot</code> ·  <code>RAG Explorer</code> (Dashboard / Ingest / Search / Chat) ·  <code>DeepEval</code> (per-metric runner cards, judge selector, batch progress banner)
+    </div>
+  </div>
+
+  <div class="arrows">
+    <div><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#a0967f">/api</span><br/>↓</div>
+    <div><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#a0967f">/rag</span><br/>↓</div>
+    <div><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#a0967f">/eval</span><br/>↓</div>
+    <div><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#a0967f">SSE /eval/events</span><br/>↑</div>
+  </div>
+
+  <div class="layer-tag">Services</div>
+  <div class="row lay-1">
+    <div class="card">
+      <div class="head">
+        <div class="icon orange">CB</div>
+        <div><div class="name">Chatbot API</div><div class="role">Node + Express + groq-sdk</div></div>
+        <span class="port">:4000</span>
+      </div>
+      <div class="body">
+        E-commerce assistant. Bakes 10-product catalog + 5 policies into the system prompt. Strict refusal rules for off-topic / PII probes.
+      </div>
+      <div class="chips">
+        <span class="chip">/api/chat</span>
+        <span class="chip">/api/products</span>
+        <span class="chip">/api/policies</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head">
+        <div class="icon green">RAG</div>
+        <div><div class="name">RAG API</div><div class="role">FastAPI + ChromaDB + pypdf</div></div>
+        <span class="port">:8000</span>
+      </div>
+      <div class="body">
+        PDF / text ingestion → recursive chunker (~800 chars, 120 overlap) → Nomic embeddings → cosine search → grounded generation with inline <code>[filename]</code> citations.
+      </div>
+      <div class="chips">
+        <span class="chip">/ingest</span>
+        <span class="chip">/chunks</span>
+        <span class="chip">/query</span>
+        <span class="chip">/chat</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head">
+        <div class="icon violet">EV</div>
+        <div><div class="name">Test Runner</div><div class="role">FastAPI + DeepEval</div></div>
+        <span class="port">:9000</span>
+      </div>
+      <div class="body">
+        Hits chatbot/RAG, builds <code>LLMTestCase</code>s, scores against 20 metrics with switchable judge LLM. Streams progress via Server-Sent Events.
+      </div>
+      <div class="chips">
+        <span class="chip">/metrics</span>
+        <span class="chip">/run</span>
+        <span class="chip">/run-batch-async</span>
+        <span class="chip">/events</span>
+        <span class="chip">/judge/apply</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-tag">Models &amp; Data</div>
+  <div class="row lay-2">
+    <div class="card">
+      <div class="head"><div class="icon orange">G</div><div><div class="name">Groq</div><div class="role">cloud inference</div></div></div>
+      <div class="body">
+        Chatbot &amp; RAG generation:<br/><code>llama-3.1-8b-instant</code><br/>Default judge:<br/><code>llama-4-scout-17b</code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head"><div class="icon brown">O</div><div><div class="name">Ollama</div><div class="role">local serving</div></div></div>
+      <div class="body">
+        Embeddings:<br/><code>nomic-embed-text</code> (768-dim)<br/>Local generator / judge:<br/><code>gemma3:1b</code>, <code>qwen3:4b</code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head"><div class="icon green">C</div><div><div class="name">ChromaDB</div><div class="role">persistent vector store</div></div></div>
+      <div class="body">
+        Cosine distance, single collection <code>shopmate_kb</code>. Persists to <code>chroma_db/</code> on disk.
+      </div>
+    </div>
+    <div class="card">
+      <div class="head"><div class="icon blue">D</div><div><div class="name">DeepEval</div><div class="role">metric library</div></div></div>
+      <div class="body">
+        Built-in metrics + custom <code>GEval</code> rubrics, with retries on rate-limit and tunable per-metric test cases.
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-tag">RAG pipeline (inside the RAG API)</div>
+  <div class="pipeline">
+    <div class="stage"><div class="stage-num">1</div><h4>Ingest</h4><p>PDF / .txt → chunks (~800c, 120 overlap)</p></div>
+    <div class="stage"><div class="stage-num">2</div><h4>Embed</h4><p>Ollama nomic-embed-text · 768-dim</p></div>
+    <div class="stage"><div class="stage-num">3</div><h4>Store</h4><p>ChromaDB persistent · cosine</p></div>
+    <div class="stage"><div class="stage-num">4</div><h4>Retrieve</h4><p>top-k semantic search · k tunable</p></div>
+    <div class="stage"><div class="stage-num">5</div><h4>Answer</h4><p>Groq LLM grounds + cites sources</p></div>
+  </div>
+
+  <div class="footer">
+    <div>github.com / <span class="url">muralinagarajan87-web/deep-llm-workbench</span></div>
+    <div><span class="pill pass">20 / 20 metrics passing</span> · judge llama-4-scout-17b</div>
+  </div>
+
+</div>
+</body></html>

@@ -10,7 +10,7 @@ It contains **three projects** that ship together:
 
 All three are surfaced through a **single unified UI** with three top-level tabs.
 
-> ![Hero — Chatbot tab](docs/screenshots/03-chatbot.png)
+> ![Architecture](docs/screenshots/00-architecture-diagram.png)
 
 ---
 
